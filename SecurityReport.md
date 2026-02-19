@@ -16,7 +16,7 @@
 
 ### Payload de prueba:
 
-```javascript
+javascript
 // Payload JSON para el cuerpo de la petición (Body)
 {
   "email": "' OR '1'='1",
@@ -24,7 +24,8 @@
 }
 // La query resultante se convierte en: 
 // SELECT * FROM users WHERE email = '' OR '1'='1' AND password = '...'
-```
+
+---
 
 # Vulnerabilidad #2: [A02:2026 - Broken Access Control]
 **Ubicación**: src/routes/student.routes.js (Endpoints DELETE /:id y PUT /:id)
@@ -35,13 +36,13 @@
 
 ### Payload de prueba:
 
-```JavaScript
+JavaScript
 
 // Petición fetch que un atacante puede ejecutar desde la consola del navegador
 fetch('http://localhost:3000/api/students/1', {
     method: 'DELETE'
 });
-// El servidor responderá "Student deleted successfully" sin pedir credenciales.```
+// El servidor responderá "Student deleted successfully" sin pedir credenciales.
 
 
 
@@ -55,13 +56,13 @@ fetch('http://localhost:3000/api/students/1', {
 
 ### Payload de prueba:
 
-```javascript
+javascript
 // Payload JSON malicioso
 {
   "filename": "../../hack.js",
   "content": "console.log('SERVIDOR HACKEADO'); process.exit(1);"
 }
-// Esto creará el archivo hack.js dos niveles arriba de la carpeta uploads.```
+// Esto creará el archivo hack.js dos niveles arriba de la carpeta uploads.
 
 # Vulnerabilidad #4: [A04:2026 - Cryptographic Failures]
 
@@ -75,7 +76,7 @@ src/middleware/auth.js: Clave secreta para firmar tokens (const JWT_SECRET = "su
 
 ### Payload de prueba:
 
-```// No requiere payload complejo, es visible en la respuesta del Login:
+// No requiere payload complejo, es visible en la respuesta del Login:
 // Respuesta del servidor vulnerable:
 {
     "message": "Login successful",
@@ -86,17 +87,17 @@ src/middleware/auth.js: Clave secreta para firmar tokens (const JWT_SECRET = "su
         "password": "admin123", // <--- ¡AQUÍ ESTÁ LA CONTRASEÑA EXPUESTA!
         "role": "admin"
     }
-}```
+}
 
 ### Payload de prueba:
 
-```javascript
+javascript
 // Payload JSON malicioso
 {
   "filename": "../../hack.js",
   "content": "console.log('SERVIDOR HACKEADO'); process.exit(1);"
 }
-// Esto creará el archivo hack.js dos niveles arriba de la carpeta uploads.```
+// Esto creará el archivo hack.js dos niveles arriba de la carpeta uploads.
 
 # Vulnerabilidad #5: [A05:2026 - Insecure Design / Lack of Rate Limiting]
 
@@ -109,7 +110,7 @@ src/middleware/auth.js: Clave secreta para firmar tokens (const JWT_SECRET = "su
 
 ### Payload de prueba:
 
-```// Script de bucle infinito (Pseudo-código para prueba de carga)
+// Script de bucle infinito (Pseudo-código para prueba de carga)
 async function attack() {
   while(true) {
     fetch('/api/login', { 
@@ -119,7 +120,7 @@ async function attack() {
     });
   }
 }
-// El servidor intentará procesar todas las peticiones hasta colapsar.```
+// El servidor intentará procesar todas las peticiones hasta colapsar.
 
 # Vulnerabilidad #6: [A06:2026 - Cryptographic Failures]
 
@@ -132,7 +133,7 @@ src/middleware/auth.js: Clave secreta para firmar tokens (const JWT_SECRET = "su
 
 ### Payload de prueba:
 
-```// 1. Evidencia de contraseña en texto plano (Consulta SQL directa)
+// 1. Evidencia de contraseña en texto plano (Consulta SQL directa)
 SELECT email, password FROM users WHERE email = 'admin@school.com';
 // Resultado esperado (VULNERABLE): 
 // +------------------+----------+
@@ -293,13 +294,13 @@ const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 **Impact**: Agotamiento de recursos del servidor y caída del servicio.
 
 **Fixed Code**:
-```javascript
+javascript
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   message: { error: "Demasiadas peticiones" }
 });
-app.use("/api/", apiLimiter);```
+app.use("/api/", apiLimiter);
 
 ### Finding #6: Cryptographic Failures & Hardcoded Secrets
 
@@ -312,9 +313,9 @@ app.use("/api/", apiLimiter);```
 **Impact**: Exposición total de credenciales de usuario y riesgo de falsificación de tokens de administrador (Account Takeover).
 
 **Fixed Code**:
-```javasscript
+javasscript
 const JWT_SECRET = "supersecret123"; 
-if (user.password === password) { ... }```
+if (user.password === password) { ... }
 
 ---
 
@@ -360,5 +361,6 @@ if (user.password === password) { ... }```
 | **A08 - Software & Data Integrity** | ❌ | Se confiaba ciegamente en el nombre de archivo enviado por el usuario en /upload sin sanitización. | 🟡 Medium |
 | **A09 - Security Logging** | ❌ | Solo se usaba console.log. No había registros persistentes ni alertas de intentos fallidos. | 🟡 Medium |
 | **A10 - Server-Side Request Forgery** | ❌ | La aplicación no realiza peticiones a URLs externas. | 🟢 Low |
+
 
 
