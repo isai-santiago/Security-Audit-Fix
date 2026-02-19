@@ -152,7 +152,7 @@ visual hecho por gemini :D```
 
 **Application**: Students Management API
 **Assessment Date**: 13 de Febrero de 2026
-**Assessor**: Zeryux
+**Assessor**: Isai Santiago
 **Overall Risk**: ~~CRITICAL (Antes)~~ -> **LOW (Actual)**
 
 ### Key Findings
@@ -360,4 +360,5 @@ if (user.password === password) { ... }```
 | **A08 - Software & Data Integrity** | ❌ | Se confiaba ciegamente en el nombre de archivo enviado por el usuario en /upload sin sanitización. | 🟡 Medium |
 | **A09 - Security Logging** | ❌ | Solo se usaba console.log. No había registros persistentes ni alertas de intentos fallidos. | 🟡 Medium |
 | **A10 - Server-Side Request Forgery** | ❌ | La aplicación no realiza peticiones a URLs externas. | 🟢 Low |
+
 
